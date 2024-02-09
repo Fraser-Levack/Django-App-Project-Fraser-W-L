@@ -1,42 +1,33 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
 {% load static %}
-<html>
-    <head>
-        <title>Rango</title>
-    </head>
-    <body>
+
+{% block title_block %}
+    {% if category %}
+        {{ category.name }}
+    {% else %}
+        Unknown Category
+    {% endif %}
+{% endblock %}
+
+{% block body_block %}
+    {% if category %}
+        <h1>{{ category.name }}</h1>
+        {% if pages %}
+            <ul>
+                {% for page in pages %}
+                    <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>No pages currently in category.</strong>
+        {% endif %}
 
         <div>
-            {% if category %}
-                <h1>{{ category.name }}</h1>
-                {% if pages %}
-                <ul>
-                    {% for page in pages %}
-                     <li><a href="{{ page.url }}">{{ page.title }}</a></li>
-                    {% endfor %}
-                </ul>
-
-
-
-                {% else %}
-                <strong>No pages currently in category.</strong>
-                {% endif %}
-
-                <div>
-                    <a href="/rango/category/{{category.slug }}/add_page/">Add Page</a> <br/>
-                </div>
-
-            {% else %}
-                <strong>There are no categories present.</strong>
-            {% endif %}
+            <a href="{% url 'rango:add_page' category.slug %}">Add Page to {{ category.name }}</a> <br/>
         </div>
 
-        <div>
-            <a href="/rango/">Index</a><br />
-        </div>
-        <div>
-            <a href="/rango/about/">About</a><br />
-            <img src="{% static 'images/CRango.png' %}" alt="Picture of Rango" />
-        </div>
-    </body>
-</html>
+    {% else %}
+        <strong>There are no categories present.</strong>
+    {% endif %}
+{% endblock %}
+
